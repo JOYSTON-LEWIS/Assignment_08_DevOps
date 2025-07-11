@@ -1,6 +1,6 @@
 const express = require("express");
 const app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3001;
 const connect = require("./database/mongoDb");
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
@@ -39,5 +39,5 @@ app.get("/", (req, res) => {
 
 app.listen(port, () => {
   connect();
-  console.log(`Example app listening at http://localhost:3000`);
+  console.log(`Example app listening at http://localhost:${port}`);
 });
