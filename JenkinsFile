@@ -19,7 +19,8 @@ pipeline {
         stage('Git Pull') {
             steps {
                 git branch: 'main', url: "${env.GITHUB_REPO}"
-
+                echo "✅ Repository cloned. Proceeding with the build."
+                /*
                 script {
                     def backendCommit = sh(returnStdout: true, script: "cd backend && git rev-parse HEAD").trim()
                     def frontendCommit = sh(returnStdout: true, script: "cd frontend && git rev-parse HEAD").trim()
@@ -45,6 +46,7 @@ pipeline {
                         error('Build skipped due to no changes.')
                     }
                 }
+                */
             }
         }
 
@@ -64,10 +66,10 @@ echo "✅ Connected to EC2"
 
 # Update system and install tools
 sudo apt-get update -y
-sudo apt-get install -y docker.io curl git apt-transport-https software-properties-common conntrack
+sudo apt-get install -y docker.io curl git apt-transport-https software-properties-common conntrack daemonize
 
 # Add user to docker group
-sudo usermod -aG docker \$(whoami)
+sudo usermod -aG docker ubuntu
 
 # Fix kernel file protection issue
 sudo sysctl fs.protected_regular=0
@@ -88,7 +90,7 @@ minikube delete --all --purge || true
 rm -rf ~/.minikube ~/.kube
 
 # Start Minikube using Docker driver (non-root)
-minikube start --driver=docker --cpus=2 --memory=2048 --force --wait-timeout=5m0s
+minikube start --driver=docker --cpus=2 --memory=2048 --force --wait-timeout=5m0s || minikube logs
 
 # Clone the repo
 mkdir -p ~/devops8 && cd ~/devops8
@@ -260,7 +262,7 @@ imagePullSecrets:
   - name: docker-hub-secret
 env:
   - name: REACT_APP_API_BASE_URL
-    value: "http://${SSH_IP}:${PORT}"
+    value: "http://backend:${PORT}"
 service:
   type: NodePort
   port: 3000
@@ -290,45 +292,68 @@ stage('Post-Deploy Validation') {
 
                 sh """
                 ssh -o StrictHostKeyChecking=no ${SSH_USER}@${SSH_IP} << 'EOF'
-                    echo "🔍 Verifying Helm Deployment"
-                    helm list
+cat << 'EOSCRIPT' > /home/ubuntu/post-script.sh
+#!/bin/bash
+PLAIN_IP="${SSH_IP}"
 
-                    echo "🔍 Verifying Kubernetes Pods and Services"
-                    minikube kubectl -- get all
+echo "🔍 Verifying Helm Deployment"
+helm list
 
-                    echo "⏳ Waiting for Backend pod to be Ready..."
-                    timeout=90
-                    while [ "\$timeout" -gt 0 ]; do
-                      status=\$(kubectl get pods -l app.kubernetes.io/name=backend -o jsonpath="{.items[0].status.containerStatuses[0].ready}" 2>/dev/null)
-                      if [ "\$status" = "true" ]; then
-                        echo "✅ Backend pod is Ready"
-                        break
-                      fi
-                      echo "⏳ Still waiting for backend... (\$timeout seconds left)"
-                      sleep 5
-                      timeout=\$((timeout - 5))
-                    done
+echo "🔍 Verifying Kubernetes Pods and Services"
+minikube kubectl -- get all
 
-                    echo "⏳ Waiting for Frontend pod to be Ready..."
-                    timeout=90
-                    while [ "\$timeout" -gt 0 ]; do
-                      status=\$(kubectl get pods -l app.kubernetes.io/name=frontend -o jsonpath="{.items[0].status.containerStatuses[0].ready}" 2>/dev/null)
-                      if [ "\$status" = "true" ]; then
-                        echo "✅ Frontend pod is Ready"
-                        break
-                      fi
-                      echo "⏳ Still waiting for frontend... (\$timeout seconds left)"
-                      sleep 5
-                      timeout=\$((timeout - 5))
-                    done
+echo "⏳ Waiting for Backend pod to be Ready..."
+timeout=90
+while [ "\$timeout" -gt 0 ]; do
+  status=\$(kubectl get pods -l app.kubernetes.io/name=backend -o jsonpath="{.items[0].status.containerStatuses[0].ready}" 2>/dev/null)
+  if [ "\$status" = "true" ]; then
+    echo "✅ Backend pod is Ready"
+    pkill -f "kubectl port-forward svc/backend" || true
+    sleep 2
+    echo "🌐 Starting port-forward: Backend (3101 → 3001)..."
+    daemonize -o /home/ubuntu/backend.log -e /home/ubuntu/backend.err \\
+      /usr/local/bin/kubectl port-forward svc/backend 3101:3001 --address=0.0.0.0
+    sleep 5
+    echo "✅ Backend accessible at: http://\$PLAIN_IP:3101"
+    break
+  fi
+  echo "⏳ Still waiting for backend... (\$timeout seconds left)"
+  sleep 5
+  timeout=\$((timeout - 5))
+done
 
-                    echo "🌐 Access URL for Frontend:"
-                    frontend_url=\$(minikube service frontend --url)
-                    echo "✅ Frontend running at: \$frontend_url"
+echo "⏳ Waiting for Frontend pod to be Ready..."
+timeout=90
+while [ "\$timeout" -gt 0 ]; do
+  status=\$(kubectl get pods -l app.kubernetes.io/name=frontend -o jsonpath="{.items[0].status.containerStatuses[0].ready}" 2>/dev/null)
+  if [ "\$status" = "true" ]; then
+    echo "✅ Frontend pod is Ready"
+    pkill -f "kubectl port-forward svc/frontend" || true
+    sleep 2
+    echo "🌐 Starting port-forward: Frontend (3100 → 3000)..."
+    daemonize -o /home/ubuntu/frontend.log -e /home/ubuntu/frontend.err \\
+      /usr/local/bin/kubectl port-forward svc/frontend 3100:3000 --address=0.0.0.0
+    sleep 5
+    echo "✅ Frontend accessible at: http://\$PLAIN_IP:3100"
+    break
+  fi
+  echo "⏳ Still waiting for frontend... (\$timeout seconds left)"
+  sleep 5
+  timeout=\$((timeout - 5))
+done
 
-                    echo "🌐 Access URL for Backend:"
-                    backend_url=\$(minikube service backend --url)
-                    echo "✅ Backend running at: \$backend_url"
+# echo "🌐 Access URL for Frontend:"
+# frontend_url=\$(minikube service frontend --url)
+# echo "✅ Frontend running at: \$frontend_url"
+
+# echo "🌐 Access URL for Backend:"
+# backend_url=\$(minikube service backend --url)
+# echo "✅ Backend running at: \$backend_url"
+
+EOSCRIPT
+                    chmod +x /home/ubuntu/post-script.sh
+                    bash /home/ubuntu/post-script.sh > /home/ubuntu/post-script.log 2>&1
+                    cat /home/ubuntu/post-script.log
 
                     echo "🎉 BUILD SUCCESSFUL!"
 EOF
