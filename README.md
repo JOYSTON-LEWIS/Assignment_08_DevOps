@@ -346,18 +346,43 @@ daemonize -o frontend.log -e frontend.err \
 ```text
 ✅ Access URLs
 ```
-```text
-Frontend URL
-```
+
+Frontend URL:
 ```text
 http://<EC2-PUBLIC-IP>:3100
 ```
-```text
-Backend URL
-```
+
+Backend URL:
 ```text
 http://<EC2-PUBLIC-IP>:3101
 ```
 
+## ⚙️ Screenshots
+
+![IMG_01](https://github.com/JOYSTON-LEWIS/My-Media-Repository/blob/main/Assignment_08_DevOps_Outputs_Images/IMG_01.png)
+![IMG_02](https://github.com/JOYSTON-LEWIS/My-Media-Repository/blob/main/Assignment_08_DevOps_Outputs_Images/IMG_02.png)
+![IMG_03](https://github.com/JOYSTON-LEWIS/My-Media-Repository/blob/main/Assignment_08_DevOps_Outputs_Images/IMG_03.png)
+![IMG_04](https://github.com/JOYSTON-LEWIS/My-Media-Repository/blob/main/Assignment_08_DevOps_Outputs_Images/IMG_04.png)
+![IMG_05](https://github.com/JOYSTON-LEWIS/My-Media-Repository/blob/main/Assignment_08_DevOps_Outputs_Images/IMG_05.png)
+![IMG_06](https://github.com/JOYSTON-LEWIS/My-Media-Repository/blob/main/Assignment_08_DevOps_Outputs_Images/IMG_06.png)
+![IMG_07](https://github.com/JOYSTON-LEWIS/My-Media-Repository/blob/main/Assignment_08_DevOps_Outputs_Images/IMG_07.png)
+![IMG_08](https://github.com/JOYSTON-LEWIS/My-Media-Repository/blob/main/Assignment_08_DevOps_Outputs_Images/IMG_08.png)
+![IMG_09](https://github.com/JOYSTON-LEWIS/My-Media-Repository/blob/main/Assignment_08_DevOps_Outputs_Images/IMG_09.png)
+![IMG_10](https://github.com/JOYSTON-LEWIS/My-Media-Repository/blob/main/Assignment_08_DevOps_Outputs_Images/IMG_10.png)
+![IMG_11](https://github.com/JOYSTON-LEWIS/My-Media-Repository/blob/main/Assignment_08_DevOps_Outputs_Images/IMG_11.png)
+![IMG_12](https://github.com/JOYSTON-LEWIS/My-Media-Repository/blob/main/Assignment_08_DevOps_Outputs_Images/IMG_12.png)
+![IMG_13](https://github.com/JOYSTON-LEWIS/My-Media-Repository/blob/main/Assignment_08_DevOps_Outputs_Images/IMG_13.png)
+![IMG_14](https://github.com/JOYSTON-LEWIS/My-Media-Repository/blob/main/Assignment_08_DevOps_Outputs_Images/IMG_14.png)
+![IMG_15](https://github.com/JOYSTON-LEWIS/My-Media-Repository/blob/main/Assignment_08_DevOps_Outputs_Images/IMG_15.png)
+![IMG_16](https://github.com/JOYSTON-LEWIS/My-Media-Repository/blob/main/Assignment_08_DevOps_Outputs_Images/IMG_16.png)
+![IMG_17](https://github.com/JOYSTON-LEWIS/My-Media-Repository/blob/main/Assignment_08_DevOps_Outputs_Images/IMG_17.png)
+![IMG_18](https://github.com/JOYSTON-LEWIS/My-Media-Repository/blob/main/Assignment_08_DevOps_Outputs_Images/IMG_18.png)
+![IMG_19](https://github.com/JOYSTON-LEWIS/My-Media-Repository/blob/main/Assignment_08_DevOps_Outputs_Images/IMG_19.png)
+![IMG_20](https://github.com/JOYSTON-LEWIS/My-Media-Repository/blob/main/Assignment_08_DevOps_Outputs_Images/IMG_20.png)
+![IMG_21](https://github.com/JOYSTON-LEWIS/My-Media-Repository/blob/main/Assignment_08_DevOps_Outputs_Images/IMG_21.png)
+![IMG_22](https://github.com/JOYSTON-LEWIS/My-Media-Repository/blob/main/Assignment_08_DevOps_Outputs_Images/IMG_22.png)
+![IMG_23](https://github.com/JOYSTON-LEWIS/My-Media-Repository/blob/main/Assignment_08_DevOps_Outputs_Images/IMG_23.png)
+![IMG_24](https://github.com/JOYSTON-LEWIS/My-Media-Repository/blob/main/Assignment_08_DevOps_Outputs_Images/IMG_24.png)
+![IMG_25](https://github.com/JOYSTON-LEWIS/My-Media-Repository/blob/main/Assignment_08_DevOps_Outputs_Images/IMG_25.png)
 
 ---
