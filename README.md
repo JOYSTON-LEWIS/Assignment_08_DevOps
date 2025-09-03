@@ -386,3 +386,16 @@ http://<EC2-PUBLIC-IP>:3101
 ![IMG_25](https://github.com/JOYSTON-LEWIS/My-Media-Repository/blob/main/Assignment_08_DevOps_Outputs_Images/IMG_25.png)
 
 ---
+
+## 📜 License
+This project is licensed under the MIT License.
+
+## 🤝 Contributing
+Feel free to fork and improve the scripts! ⭐ If you find this project useful, please consider starring the repo—it really helps and supports my work! 😊
+
+## 📧 Contact
+For any queries, reach out via GitHub Issues.
+
+---
+
+🎯 **Thank you for reviewing this project! 🚀**
