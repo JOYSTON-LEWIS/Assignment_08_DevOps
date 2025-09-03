@@ -357,7 +357,7 @@ Backend URL:
 http://<EC2-PUBLIC-IP>:3101
 ```
 
-## ⚙️ Screenshots
+## 📸 Screenshots
 
 ![IMG_01](https://github.com/JOYSTON-LEWIS/My-Media-Repository/blob/main/Assignment_08_DevOps_Outputs_Images/IMG_01.png)
 ![IMG_02](https://github.com/JOYSTON-LEWIS/My-Media-Repository/blob/main/Assignment_08_DevOps_Outputs_Images/IMG_02.png)
